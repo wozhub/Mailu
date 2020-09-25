@@ -26,7 +26,7 @@ RUN [ -d /var/lib/rspamd ] && rmdir /var/lib/rspamd || true
 RUN ln -sf /mailu/filter /var/lib/rspamd 
 RUN [ -d /dkim ] && rmdir /dkim || true
 RUN ln -sf /mailu/dkim /dkim \
-RUN [ -d /etc/rspamd/override.d ] && rmdir /etc/rspamd/override.d ) || true
+RUN [ -d /etc/rspamd/override.d ] && rmdir /etc/rspamd/override.d || true
 RUN ln -sf /mailu/overrides/rspamd /etc/rspamd/override.d
 
 CMD /start.py
