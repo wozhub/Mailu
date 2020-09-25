@@ -17,8 +17,15 @@ COPY static /static
 COPY *.py /
 
 EXPOSE 80/tcp 443/tcp 110/tcp 143/tcp 465/tcp 587/tcp 993/tcp 995/tcp 25/tcp 10025/tcp 10143/tcp
-VOLUME ["/certs"]
-VOLUME ["/overrides"]
+VOLUME ["/mailu"]
+
+# https://stackoverflow.com/questions/38164939/can-we-mount-sub-directories-of-a-named-volume-in-docker
+# Expects /certs && /overrides
+RUN mkdir -p /mailu/certs /mailu/overrides \
+    && ( [ -d /certs ] && rmdir /certs ) \
+    && ( [ -d /overrides ] && rmdir /overrides ) \
+    && ln -sf /mailu/certs /certs \
+    && ln -sf /mailu/overrides /overrides
 
 CMD /start.py
 

@@ -38,8 +38,17 @@ COPY start.py /start.py
 RUN pybabel compile -d mailu/translations
 
 EXPOSE 80/tcp
-VOLUME ["/data","/dkim"]
+VOLUME ["/mailu"]
 ENV FLASK_APP mailu
+
+# https://stackoverflow.com/questions/38164939/can-we-mount-sub-directories-of-a-named-volume-in-docker
+# Expects /data && /dkim
+RUN mkdir -p /mailu/data /mailu/dkim \
+    && ( [ -d /data ] && rmdir /data ) \
+    && ( [ -d /dkim ] && rmdir /dkim ) \
+    && ln -sf /mailu/data /data \
+    && ln -sf /mailu/dkim /dkim
+
 
 CMD /start.py
 

@@ -18,7 +18,14 @@ COPY conf /conf
 COPY start.py /start.py
 
 EXPOSE 25/tcp 10025/tcp
-VOLUME ["/queue"]
+VOLUME ["/mailu"]
+ENV FLASK_APP mailu
+
+# https://stackoverflow.com/questions/38164939/can-we-mount-sub-directories-of-a-named-volume-in-docker
+# Expects /overrides
+RUN mkdir -p /mailu/overrides /mailu/overrides \
+    && ( [ -d /overrides ] && rmdir /overrides ) \
+    && ln -sf /mailu/overrides /overrides
 
 CMD /start.py
 

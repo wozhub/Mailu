@@ -33,7 +33,14 @@ COPY conf /conf
 COPY start.py /start.py
 
 EXPOSE 110/tcp 143/tcp 993/tcp 4190/tcp 2525/tcp
-VOLUME ["/mail"]
+VOLUME ["/mailu"]
+ENV FLASK_APP mailu
+
+# https://stackoverflow.com/questions/38164939/can-we-mount-sub-directories-of-a-named-volume-in-docker
+# Expects /mail
+RUN mkdir -p /mailu/mail \
+    && ( [ -d /mail ] && rmdir /mail ) \
+    && ln -sf /mailu/mail /mail
 
 CMD /start.py
 
