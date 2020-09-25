@@ -38,8 +38,9 @@ ENV FLASK_APP mailu
 
 # https://stackoverflow.com/questions/38164939/can-we-mount-sub-directories-of-a-named-volume-in-docker
 # Expects /mail
-RUN mkdir -p /mailu/mail \
-    && ( [ -d /mail ] && rmdir /mail ); ln -sf /mailu/mail /mail
+RUN mkdir -p /mailu/mail 
+RUN [ -d /mail ] && rmdir /mail || true
+RUN ln -sf /mailu/mail /mail
 
 CMD /start.py
 

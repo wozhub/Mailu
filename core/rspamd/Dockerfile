@@ -21,10 +21,13 @@ VOLUME ["/mailu"]
 
 # https://stackoverflow.com/questions/38164939/can-we-mount-sub-directories-of-a-named-volume-in-docker
 # Expects /filter && /dkim && /var/lib/rspamd
-RUN mkdir -p /mailu/filter /mailu/dkim /mailu/overrides/rspamd \
-    && ( [ -d /var/lib/rspamd ] && rmdir /var/lib/rspamd ); ln -sf /mailu/filter /var/lib/rspamd \
-    && ( [ -d /dkim ] && rmdir /dkim ); ln -sf /mailu/dkim /dkim \
-    && ( [ -d /etc/rspamd/override.d ] && rmdir /etc/rspamd/override.d ); ln -sf /mailu/overrides/rspamd /etc/rspamd/override.d
+RUN mkdir -p /mailu/filter /mailu/dkim /mailu/overrides/rspamd
+RUN [ -d /var/lib/rspamd ] && rmdir /var/lib/rspamd )
+RUN ln -sf /mailu/filter /var/lib/rspamd 
+RUN [ -d /dkim ] && rmdir /dkim || true
+RUN ln -sf /mailu/dkim /dkim \
+RUN [ -d /etc/rspamd/override.d ] && rmdir /etc/rspamd/override.d ) || true
+RUN ln -sf /mailu/overrides/rspamd /etc/rspamd/override.d
 
 CMD /start.py
 

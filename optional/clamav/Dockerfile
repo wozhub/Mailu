@@ -16,8 +16,9 @@ VOLUME ["/mailu"]
 
 # https://stackoverflow.com/questions/38164939/can-we-mount-sub-directories-of-a-named-volume-in-docker
 # Expects /data 
-RUN mkdir -p /mailu/filter \
-    && ( [ -d /data ] && rmdir /data ); ln -sf /mailu/filter /data
+RUN mkdir -p /mailu/filter
+RUN [ -d /data ] && rmdir /data || true
+RUN ln -sf /mailu/filter /data
 
 CMD /start.py
 

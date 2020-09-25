@@ -23,8 +23,9 @@ ENV FLASK_APP mailu
 
 # https://stackoverflow.com/questions/38164939/can-we-mount-sub-directories-of-a-named-volume-in-docker
 # Expects /overrides
-RUN mkdir -p /mailu/overrides /mailu/overrides \
-    && ( [ -d /overrides ] && rmdir /overrides ); ln -sf /mailu/overrides /overrides
+RUN mkdir -p /mailu/overrides
+RUN [ -d /overrides ] && rmdir /overrides || true
+RUN ln -sf /mailu/overrides /overrides
 
 CMD /start.py
 
