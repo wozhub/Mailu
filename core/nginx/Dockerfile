@@ -22,10 +22,8 @@ VOLUME ["/mailu"]
 # https://stackoverflow.com/questions/38164939/can-we-mount-sub-directories-of-a-named-volume-in-docker
 # Expects /certs && /overrides
 RUN mkdir -p /mailu/certs /mailu/overrides \
-    && ( [ -d /certs ] && rmdir /certs ) \
-    && ( [ -d /overrides ] && rmdir /overrides ) \
-    && ln -sf /mailu/certs /certs \
-    && ln -sf /mailu/overrides /overrides
+    && ( [ -d /certs ] && rmdir /certs ); ln -sf /mailu/certs /certs \
+    && ( [ -d /overrides ] && rmdir /overrides ); ln -sf /mailu/overrides /overrides
 
 CMD /start.py
 
