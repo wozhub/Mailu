@@ -22,7 +22,7 @@ VOLUME ["/mailu"]
 # https://stackoverflow.com/questions/38164939/can-we-mount-sub-directories-of-a-named-volume-in-docker
 # Expects /filter && /dkim && /var/lib/rspamd
 RUN mkdir -p /mailu/filter /mailu/dkim /mailu/overrides/rspamd
-RUN [ -d /var/lib/rspamd ] && rmdir /var/lib/rspamd )
+RUN [ -d /var/lib/rspamd ] && rmdir /var/lib/rspamd || true
 RUN ln -sf /mailu/filter /var/lib/rspamd 
 RUN [ -d /dkim ] && rmdir /dkim || true
 RUN ln -sf /mailu/dkim /dkim \
