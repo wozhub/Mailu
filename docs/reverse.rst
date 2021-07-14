@@ -154,7 +154,40 @@ Add the respective Traefik labels for your domain/configuration, like
 If your Traefik is configured to automatically request certificates from *letsencrypt*, then you’ll have a certificate for ``mail.your.doma.in`` now. However,
 ``mail.your.doma.in`` might only be the location where you want the Mailu web-interfaces to live — your mail should be sent/received from ``your.doma.in``,
 and this is the ``DOMAIN`` in your ``.env``?
-To support that use-case, Traefik can request ``SANs`` for your domain. Lets add something like
+To support that use-case, Traefik can request ``SANs`` for your domain. The configuration for this will depend on your Traefik version.
+
+----
+
+Traefik 2.x using labels configuration
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Add the appropriate labels for your domain(s) to the ``front`` container in ``docker-compose.yml``.
+
+.. code-block:: yaml
+
+  services:
+    front:
+      labels:
+        # Enable TLS
+        - "traefik.http.routers.mailu-secure.tls"
+        # Your main domain
+        - "traefik.http.routers.mailu-secure.tls.domains[0].main=your.doma.in"
+        # Optional SANs for your main domain
+        - "traefik.http.routers.mailu-secure.tls.domains[0].sans=mail.your.doma.in,webmail.your.doma.in,smtp.your.doma.in"
+        # Optionally add other domains
+        - "traefik.http.routers.mailu-secure.tls.domains[1].main=mail.other.doma.in"
+        - "traefik.http.routers.mailu-secure.tls.domains[1].sans=mail2.other.doma.in,mail3.other.doma.in"
+        # Your ACME certificate resolver
+        - "traefik.http.routers.mailu-secure.tls.certResolver=foo"
+
+Of course, be sure to define the Certificate Resolver ``foo`` in the static configuration as well.
+
+Alternatively, you can define SANs in the Traefik static configuration using routers, or in the static configuration using entrypoints. Refer to the Traefik documentation for more details.
+
+Traefik 1.x with TOML configuration
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Lets add something like
 
 .. code-block:: yaml
 
@@ -163,7 +196,11 @@ To support that use-case, Traefik can request ``SANs`` for your domain. Lets add
       main = "your.doma.in" # this is the same as $TRAEFIK_DOMAIN!
       sans = ["mail.your.doma.in", "webmail.your.doma.in", "smtp.your.doma.in"]
 
-to your ``traefik.toml``. You might need to clear your ``acme.json``, if a certificate for one of these domains already exists.
+to your ``traefik.toml``.
+
+----
+
+You might need to clear your ``acme.json``, if a certificate for one of these domains already exists.
 
 You will need some solution which dumps the certificates in ``acme.json``, so you can include them in the ``mailu/front`` container.
 One such example is ``mailu/traefik-certdumper``, which has been adapted for use in Mailu. You can add it to your ``docker-compose.yml`` like:
@@ -225,6 +262,6 @@ You can also download the example configuration files:
 Disable completely Mailu reverse proxy
 --------------------------------------
 
-You can simply disable Mailu reverse proxy by removing the ``front`` section from the ``docker-compose.yml`` and use your own means to reverse proxy requests to the proper containers.
+You must not disable Mailu reverse proxy by removing the ``front`` section from the ``docker-compose.yml``.
 
-Be careful with this method as resolving container addresses outside the Docker Compose structure is a tricky task: there is no guarantee that addresses will remain after a restart and you are almost certain that addresses will change after every upgrade (and whenever containers are recreated).
+``front`` is handling authentication and is also proxying e.g. SMTP and IMAP. A basic HTTP reverse proxy as described in this document is not sufficient for this.

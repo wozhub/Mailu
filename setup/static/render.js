@@ -51,7 +51,19 @@ $(document).ready(function() {
 		} else if (this.value == 'postgresql') {
 			$("#postgres_db").show();
 			$("#external_db").hide();
-			$("#external_db").prop('checked', false);
+			$("#external_psql").prop('checked', true);
+			$("#external_db").show();
+			$("#db_user").prop('required',true);
+			$("#db_pw").prop('required',true);
+			$("#db_url").prop('required',true);
+			$("#db_name").prop('required',true);
+			if ($("#webmail").val() == 'roundcube') {
+				$("#roundcube_external_db").show();
+				$("#roundcube_db_user").prop('required',true);
+				$("#roundcube_db_pw").prop('required',true);
+				$("#roundcube_db_url").prop('required',true);
+				$("#roundcube_db_name").prop('required',true);
+			}
 		} else if (this.value == 'mysql') {
 			$("#postgres_db").hide();
 			$("#external_db").show();
@@ -59,6 +71,13 @@ $(document).ready(function() {
 			$("#db_pw").prop('required',true);
 			$("#db_url").prop('required',true);
 			$("#db_name").prop('required',true);
+			if ($("#webmail").val() == 'roundcube') {
+				$("#roundcube_external_db").show();
+				$("#roundcube_db_user").prop('required',true);
+				$("#roundcube_db_pw").prop('required',true);
+				$("#roundcube_db_url").prop('required',true);
+				$("#roundcube_db_name").prop('required',true);
+			}
 		}
 	});
 	$("#external_psql").change(function() {
@@ -68,6 +87,13 @@ $(document).ready(function() {
 			$("#db_pw").prop('required',true);
 			$("#db_url").prop('required',true);
 			$("#db_name").prop('required',true);
+			if ($("#webmail").val() == 'roundcube') {
+				$("#roundcube_external_db").show();
+				$("#roundcube_db_user").prop('required',true);
+				$("#roundcube_db_pw").prop('required',true);
+				$("#roundcube_db_url").prop('required',true);
+				$("#roundcube_db_name").prop('required',true);
+			}
 		} else {
 			$("#external_db").hide();
 		}

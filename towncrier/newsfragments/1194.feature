@@ -1,1 +1,1 @@
-Change default password scheme to PBKDF2
+Add a credential cache to speedup authentication requests.
